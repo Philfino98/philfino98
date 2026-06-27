@@ -325,6 +325,22 @@
         font-size: 0.7rem;
         padding: 9px 16px;
       }
+      .live-note {
+        margin: 14px 0 0;
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        line-height: 1.6;
+        letter-spacing: 0.3px;
+        color: var(--fg-faint);
+      }
+      .live-note a {
+        color: var(--ember);
+        text-decoration: none;
+        border-bottom: 1px solid rgba(239, 125, 58, 0.35);
+      }
+      .live-note a:hover {
+        color: var(--ember-hi);
+      }
       @keyframes livespin {
         to {
           transform: rotate(360deg);
@@ -1827,6 +1843,17 @@
             <div class="live-frame live-video" id="live-video"></div>
             <div class="live-frame live-chat" id="live-chat"></div>
           </div>
+          <p class="live-note">
+            Pra mandar mensagem, entre na sua conta da Twitch no chat acima. Se
+            o campo de digitar não aparecer (alguns navegadores, como o Brave,
+            bloqueiam cookies de terceiros),
+            <a
+              href="https://www.twitch.tv/popout/philfino98/chat"
+              target="_blank"
+              rel="noopener"
+              >abra o chat completo aqui <span class="arr">↗</span></a
+            >.
+          </p>
         </div>
       </section>
 
@@ -3649,193 +3676,9 @@
           var ch = "philfino98";
           var lv = document.getElementById("live-video"),
             lc = document.getElementById("live-chat");
-          if (lv && lc) {
-            var lh = location.hostname;
-            if (!lh) {
-              lv.innerHTML =
-                '<div class="live-fallback"><p>A live e o chat aparecem aqui quando a p\u00e1gina estiver publicada na web (ex.: GitHub Pages). Abrindo o arquivo direto no PC, a Twitch n\u00e3o carrega.</p><a class="btn" href="https://www.twitch.tv/' +
-                ch +
-                '" target="_blank" rel="noopener">abrir na Twitch <span class="arr">\u2192</span></a></div>';
-              lc.style.display = "none";
-            } else {
-              var pp = encodeURIComponent(lh);
-              var srcV =
-                "https://player.twitch.tv/?channel=" +
-                ch +
-                "&parent=" +
-                pp +
-                "&autoplay=false";
-              var srcC =
-                "https://www.twitch.tv/embed/" +
-                ch +
-                "/chat?darkpopout&parent=" +
-                pp;
-              var spinner =
-                '<div class="live-loading"><span class="live-spin"></span><span>Carregando\u2026</span></div>';
-              lv.innerHTML = spinner;
-              lc.innerHTML = spinner;
-              function loadFrame(box, src, title) {
-                box.innerHTML = spinner;
-                var fr = document.createElement("iframe");
-                fr.title = title;
-                fr.setAttribute("scrolling", "no");
-                fr.setAttribute("allowfullscreen", "");
-                var done = false;
-                fr.addEventListener("load", function () {
-                  done = true;
-                  var l = box.querySelector(".live-loading");
-                  if (l) l.remove();
-                });
-                setTimeout(function () {
-                  if (!done) {
-                    var l = box.querySelector(".live-loading");
-                    if (l) {
-                      l.innerHTML =
-                        '<span>Demorou pra carregar.</span><button class="btn live-retry" type="button">\u21bb Recarregar</button>';
-                      var b = l.querySelector(".live-retry");
-                      if (b)
-                        b.addEventListener("click", function () {
-                          loadFrame(box, src, title);
-                        });
-                    }
-                  }
-                }, 15000);
-                fr.src = src;
-                box.appendChild(fr);
-              }
-              function startLive() {
-                loadFrame(lv, srcV, "Transmiss\u00e3o ao vivo na Twitch");
-                setTimeout(function () {
-                  loadFrame(lc, srcC, "Chat da Twitch");
-                }, 1000);
-              }
-              if (document.readyState === "complete") {
-                setTimeout(startLive, 250);
-              } else {
-                window.addEventListener("load", function () {
-                  setTimeout(startLive, 250);
-                });
-              }
-              if ("IntersectionObserver" in window && window.matchMedia) {
-                var lw = lv.parentNode,
-                  sec = document.getElementById("live"),
-                  floating = false,
-                  ph = null,
-                  observing = false,
-                  dismissed = false,
-                  flipT = null;
-                function ensureClose() {
-                  if (!lv.querySelector(".live-mini-close")) {
-                    var x = document.createElement("button");
-                    x.className = "live-mini-close";
-                    x.type = "button";
-                    x.setAttribute("aria-label", "Fechar mini player");
-                    x.innerHTML = "\u2715";
-                    x.addEventListener("click", function () {
-                      dismissed = true;
-                      setFloat(false);
-                    });
-                    lv.appendChild(x);
-                  }
-                }
-                function setFloat(on) {
-                  if (on === floating) return;
-                  if (on) {
-                    floating = true;
-                    lv.style.transition = "";
-                    lv.style.transform = "";
-                    var r = lv.getBoundingClientRect();
-                    if (!ph) {
-                      ph = document.createElement("div");
-                      ph.className = "live-ph";
-                      ph.setAttribute("aria-hidden", "true");
-                    }
-                    lw.insertBefore(ph, lv);
-                    var fw = Math.min(360, window.innerWidth * 0.32);
-                    var fh = r.width ? (fw * r.height) / r.width : fw * 0.62;
-                    lv.style.width = fw + "px";
-                    lv.style.height = fh + "px";
-                    lv.classList.add("is-floating");
-                    ensureClose();
-                    if (sec) sec.style.zIndex = "96";
-                  } else {
-                    floating = false;
-                    var first = lv.getBoundingClientRect();
-                    lv.classList.remove("is-floating");
-                    lv.style.width = "";
-                    lv.style.height = "";
-                    if (ph && ph.parentNode) ph.parentNode.removeChild(ph);
-                    var last = lv.getBoundingClientRect();
-                    var dx = first.left - last.left,
-                      dy = first.top - last.top,
-                      s = last.width ? first.width / last.width : 1;
-                    lv.style.transformOrigin = "top left";
-                    lv.style.transition = "none";
-                    lv.style.transform =
-                      "translate(" + dx + "px," + dy + "px) scale(" + s + ")";
-                    void lv.offsetWidth;
-                    requestAnimationFrame(function () {
-                      lv.style.transition =
-                        "transform .42s cubic-bezier(.2,.85,.25,1)";
-                      lv.style.transform = "";
-                    });
-                    clearTimeout(flipT);
-                    flipT = setTimeout(function () {
-                      lv.style.transition = "";
-                      lv.style.transformOrigin = "";
-                      if (sec) sec.style.zIndex = "";
-                    }, 480);
-                  }
-                }
-                var fio = new IntersectionObserver(
-                  function (ents) {
-                    ents.forEach(function (e) {
-                      if (e.isIntersecting) {
-                        dismissed = false;
-                        setFloat(false);
-                      } else if (
-                        e.boundingClientRect.bottom < 0 &&
-                        !dismissed
-                      ) {
-                        setFloat(true);
-                      } else {
-                        setFloat(false);
-                      }
-                    });
-                  },
-                  { threshold: 0 },
-                );
-                var mq = window.matchMedia("(min-width: 900px)");
-                function applyMode() {
-                  if (mq.matches) {
-                    if (!observing) {
-                      fio.observe(lw);
-                      observing = true;
-                    }
-                  } else {
-                    if (observing) {
-                      fio.unobserve(lw);
-                      observing = false;
-                    }
-                    setFloat(false);
-                  }
-                }
-                if (mq.addEventListener)
-                  mq.addEventListener("change", applyMode);
-                else if (mq.addListener) mq.addListener(applyMode);
-                applyMode();
-              }
-            }
-          }
-        } catch (err) {}
-      })();
-      (function () {
-        try {
-          var ch = "philfino98";
           var pill = document.getElementById("live-status"),
             label = document.getElementById("live-label"),
             hud = document.getElementById("hud-status");
-          if (!pill && !hud) return;
           function setState(live) {
             if (pill) pill.classList.toggle("is-live", live);
             if (label) label.textContent = live ? "ao vivo" : "offline";
@@ -3844,7 +3687,259 @@
               hud.classList.toggle("moss", live);
             }
           }
-          function check() {
+          setState(false);
+          if (!lv || !lc) return;
+          var lh = location.hostname;
+          if (!lh) {
+            lv.innerHTML =
+              '<div class="live-fallback"><p>A live e o chat aparecem aqui quando a p\u00e1gina estiver publicada na web (ex.: GitHub Pages). Abrindo o arquivo direto no PC, a Twitch n\u00e3o carrega.</p><a class="btn" href="https://www.twitch.tv/' +
+              ch +
+              '" target="_blank" rel="noopener">abrir na Twitch <span class="arr">\u2192</span></a></div>';
+            lc.style.display = "none";
+            return;
+          }
+          var pp = encodeURIComponent(lh);
+          var srcC =
+            "https://www.twitch.tv/embed/" +
+            ch +
+            "/chat?parent=" +
+            pp +
+            "&darkpopout";
+          var spinner =
+            '<div class="live-loading"><span class="live-spin"></span><span>Carregando\u2026</span></div>';
+          lv.innerHTML = spinner;
+          lc.innerHTML = spinner;
+          function fillFrame() {
+            var f = lv.querySelector("iframe");
+            if (f) {
+              f.style.position = "absolute";
+              f.style.top = "0";
+              f.style.left = "0";
+              f.style.width = "100%";
+              f.style.height = "100%";
+              f.style.border = "0";
+            }
+          }
+          function clearSpin(box) {
+            var l = box.querySelector(".live-loading");
+            if (l) l.remove();
+          }
+          function loadChat() {
+            lc.innerHTML = spinner;
+            var fr = document.createElement("iframe");
+            fr.title = "Chat da Twitch";
+            fr.setAttribute("scrolling", "no");
+            var done = false;
+            fr.addEventListener("load", function () {
+              done = true;
+              clearSpin(lc);
+            });
+            setTimeout(function () {
+              if (!done) {
+                var l = lc.querySelector(".live-loading");
+                if (l) {
+                  l.innerHTML =
+                    '<span>Demorou pra carregar.</span><button class="btn live-retry" type="button">\u21bb Recarregar</button>';
+                  var b = l.querySelector(".live-retry");
+                  if (b) b.addEventListener("click", loadChat);
+                }
+              }
+            }, 15000);
+            fr.src = srcC;
+            lc.appendChild(fr);
+          }
+          function videoIframe() {
+            lv.innerHTML = spinner;
+            var fr = document.createElement("iframe");
+            fr.title = "Transmiss\u00e3o ao vivo na Twitch";
+            fr.setAttribute("allowfullscreen", "");
+            var done = false;
+            fr.addEventListener("load", function () {
+              done = true;
+              clearSpin(lv);
+              fillFrame();
+            });
+            setTimeout(function () {
+              if (!done) {
+                var l = lv.querySelector(".live-loading");
+                if (l) {
+                  l.innerHTML =
+                    '<span>Demorou pra carregar.</span><button class="btn live-retry" type="button">\u21bb Recarregar</button>';
+                  var b = l.querySelector(".live-retry");
+                  if (b) b.addEventListener("click", videoIframe);
+                }
+              }
+            }, 15000);
+            fr.src =
+              "https://player.twitch.tv/?channel=" +
+              ch +
+              "&parent=" +
+              pp +
+              "&autoplay=true&muted=true";
+            lv.appendChild(fr);
+          }
+          function videoSDK() {
+            try {
+              var embed = new Twitch.Embed("live-video", {
+                width: "100%",
+                height: "100%",
+                channel: ch,
+                parent: [lh],
+                layout: "video",
+                autoplay: true,
+                muted: true,
+              });
+              embed.addEventListener(Twitch.Embed.VIDEO_READY, function () {
+                clearSpin(lv);
+                fillFrame();
+                var plr = embed.getPlayer();
+                try {
+                  plr.addEventListener(Twitch.Player.ONLINE, function () {
+                    setState(true);
+                  });
+                } catch (e) {}
+                try {
+                  plr.addEventListener(Twitch.Player.OFFLINE, function () {
+                    setState(false);
+                  });
+                } catch (e) {}
+                try {
+                  plr.addEventListener(Twitch.Player.PLAYING, function () {
+                    setState(true);
+                  });
+                } catch (e) {}
+              });
+            } catch (e) {
+              videoIframe();
+            }
+          }
+          function startLive() {
+            loadChat();
+            if (window.Twitch && window.Twitch.Embed) {
+              videoSDK();
+            } else {
+              var s = document.createElement("script");
+              s.src = "https://embed.twitch.tv/embed/v1.js";
+              s.async = true;
+              s.onload = videoSDK;
+              s.onerror = videoIframe;
+              document.head.appendChild(s);
+            }
+          }
+          if (document.readyState === "complete") {
+            setTimeout(startLive, 250);
+          } else {
+            window.addEventListener("load", function () {
+              setTimeout(startLive, 250);
+            });
+          }
+          if ("IntersectionObserver" in window && window.matchMedia) {
+            var lw = lv.parentNode,
+              sec = document.getElementById("live"),
+              floating = false,
+              ph = null,
+              observing = false,
+              dismissed = false,
+              flipT = null;
+            function ensureClose() {
+              if (!lv.querySelector(".live-mini-close")) {
+                var x = document.createElement("button");
+                x.className = "live-mini-close";
+                x.type = "button";
+                x.setAttribute("aria-label", "Fechar mini player");
+                x.innerHTML = "\u2715";
+                x.addEventListener("click", function () {
+                  dismissed = true;
+                  setFloat(false);
+                });
+                lv.appendChild(x);
+              }
+            }
+            function setFloat(on) {
+              if (on === floating) return;
+              if (on) {
+                floating = true;
+                lv.style.transition = "";
+                lv.style.transform = "";
+                var r = lv.getBoundingClientRect();
+                if (!ph) {
+                  ph = document.createElement("div");
+                  ph.className = "live-ph";
+                  ph.setAttribute("aria-hidden", "true");
+                }
+                lw.insertBefore(ph, lv);
+                var fw = Math.min(360, window.innerWidth * 0.32);
+                var fh = r.width ? (fw * r.height) / r.width : fw * 0.62;
+                lv.style.width = fw + "px";
+                lv.style.height = fh + "px";
+                lv.classList.add("is-floating");
+                ensureClose();
+                if (sec) sec.style.zIndex = "96";
+              } else {
+                floating = false;
+                var first = lv.getBoundingClientRect();
+                lv.classList.remove("is-floating");
+                lv.style.width = "";
+                lv.style.height = "";
+                if (ph && ph.parentNode) ph.parentNode.removeChild(ph);
+                var last = lv.getBoundingClientRect();
+                var dx = first.left - last.left,
+                  dy = first.top - last.top,
+                  s = last.width ? first.width / last.width : 1;
+                lv.style.transformOrigin = "top left";
+                lv.style.transition = "none";
+                lv.style.transform =
+                  "translate(" + dx + "px," + dy + "px) scale(" + s + ")";
+                void lv.offsetWidth;
+                requestAnimationFrame(function () {
+                  lv.style.transition =
+                    "transform .42s cubic-bezier(.2,.85,.25,1)";
+                  lv.style.transform = "";
+                });
+                clearTimeout(flipT);
+                flipT = setTimeout(function () {
+                  lv.style.transition = "";
+                  lv.style.transformOrigin = "";
+                  if (sec) sec.style.zIndex = "";
+                }, 480);
+              }
+            }
+            var fio = new IntersectionObserver(
+              function (ents) {
+                ents.forEach(function (e) {
+                  if (e.isIntersecting) {
+                    dismissed = false;
+                    setFloat(false);
+                  } else if (e.boundingClientRect.bottom < 0 && !dismissed) {
+                    setFloat(true);
+                  } else {
+                    setFloat(false);
+                  }
+                });
+              },
+              { threshold: 0 },
+            );
+            var mq = window.matchMedia("(min-width: 900px)");
+            function applyMode() {
+              if (mq.matches) {
+                if (!observing) {
+                  fio.observe(lw);
+                  observing = true;
+                }
+              } else {
+                if (observing) {
+                  fio.unobserve(lw);
+                  observing = false;
+                }
+                setFloat(false);
+              }
+            }
+            if (mq.addEventListener) mq.addEventListener("change", applyMode);
+            else if (mq.addListener) mq.addListener(applyMode);
+            applyMode();
+          }
+          function decapiCheck() {
+            if (!window.fetch) return;
             fetch("https://decapi.me/twitch/uptime/" + ch + "?cb=" + Date.now())
               .then(function (r) {
                 return r.ok ? r.text() : Promise.reject(0);
@@ -3854,9 +3949,9 @@
               })
               .catch(function () {});
           }
-          check();
-          setInterval(check, 90000);
-        } catch (e) {}
+          decapiCheck();
+          setInterval(decapiCheck, 45000);
+        } catch (err) {}
       })();
     </script>
   </body>
