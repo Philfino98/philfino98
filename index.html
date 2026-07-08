@@ -560,6 +560,9 @@
         bottom: -12px;
         border-radius: 50%;
         background: var(--ember);
+        box-shadow:
+          0 0 10px 2px rgba(239, 125, 58, 0.55),
+          0 0 26px 8px rgba(239, 125, 58, 0.2);
         opacity: 0;
         animation-name: rise;
         animation-timing-function: linear;
@@ -571,13 +574,13 @@
           opacity: 0;
         }
         10% {
-          opacity: 0.92;
+          opacity: 0.95;
         }
         84% {
-          opacity: 0.4;
+          opacity: 0.75;
         }
         100% {
-          transform: translateY(-100vh) scale(0.3);
+          transform: translateY(-100vh) scale(0.55);
           opacity: 0;
         }
       }
@@ -3312,12 +3315,16 @@
           (function () {
             var box = document.querySelector(".embers");
             if (!box) return;
-            var n = window.innerWidth < 620 ? 22 : 38,
+            var n = window.innerWidth < 620 ? 34 : 60,
               html = "";
             for (var i = 0; i < n; i++) {
-              var s = (Math.random() * 4 + 1.6).toFixed(1);
+              var big = Math.random() < 0.14;
+              var s = big
+                ? (Math.random() * 5 + 8).toFixed(1)
+                : (Math.random() * 4.5 + 2).toFixed(1);
               var col =
                 Math.random() < 0.34 ? "var(--ember-hi)" : "var(--ember)";
+              var dur = (Math.random() * 10 + 10).toFixed(1);
               html +=
                 '<i style="left:' +
                 (Math.random() * 100).toFixed(2) +
@@ -3327,10 +3334,11 @@
                 s +
                 "px;background:" +
                 col +
+                (big ? ";filter:blur(2px)" : "") +
                 ";animation-duration:" +
-                (Math.random() * 10 + 10).toFixed(1) +
-                "s;animation-delay:" +
-                (Math.random() * 16).toFixed(1) +
+                dur +
+                "s;animation-delay:-" +
+                (Math.random() * dur).toFixed(1) +
                 's"></i>';
             }
             box.insertAdjacentHTML("beforeend", html);
