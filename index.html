@@ -1,6 +1,7 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" style="background: #060604">
   <head>
+    <meta name="color-scheme" content="dark" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gonello — Sobrevivente · Tech · Games</title>
@@ -12,6 +13,7 @@
       document.documentElement.classList.add("js");
     </script>
 
+    <link rel="stylesheet" href="assets/css/bootstrap-icons.css" />
     <style>
       :root {
         --bg: #13140e;
@@ -1538,6 +1540,17 @@
       .slink:hover .sl-name {
         color: var(--ember);
       }
+      .slink .sl-ico {
+        font-size: 1.05em;
+        margin-right: 10px;
+        vertical-align: -2px;
+        color: var(--ember);
+      }
+      .scat .s-ico {
+        font-size: 0.85rem;
+        margin-right: 7px;
+        vertical-align: -1.5px;
+      }
       .slink .sl-handle {
         font-family: var(--mono);
         font-size: 0.78rem;
@@ -1829,6 +1842,309 @@
         opacity: 1;
         transform: none;
       }
+      .term-stack {
+        position: relative;
+        margin-top: 30px;
+        padding-bottom: 46px;
+      }
+      .term {
+        background: #101109;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.85);
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+      .term-log {
+        position: relative;
+        z-index: 2;
+        width: min(640px, 78%);
+      }
+      .term-fetch {
+        position: absolute;
+        z-index: 1;
+        top: 84px;
+        right: 0;
+        width: min(600px, 74%);
+      }
+      .term:hover,
+      .term:focus-visible {
+        z-index: 5;
+        transform: translateY(-6px);
+        box-shadow:
+          0 34px 80px -26px rgba(0, 0, 0, 0.95),
+          0 0 0 1px rgba(239, 125, 58, 0.25);
+        outline: none;
+      }
+      @media (min-width: 881px) {
+        .term.fixo {
+          z-index: 6;
+          transform: translateY(-6px);
+          box-shadow:
+            0 34px 80px -26px rgba(0, 0, 0, 0.95),
+            0 0 0 1px rgba(239, 125, 58, 0.45);
+        }
+      }
+      .term-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        background: rgba(35, 36, 26, 0.9);
+        border-bottom: 1px solid var(--line);
+      }
+      .tb-dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: var(--rust);
+      }
+      .tb-dot:nth-child(2) {
+        background: var(--ember);
+      }
+      .tb-dot:nth-child(3) {
+        background: var(--moss);
+      }
+      .term-title {
+        margin-left: 8px;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--fg-faint);
+        letter-spacing: 0.4px;
+      }
+      .term-body {
+        padding: 16px 18px 20px;
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        line-height: 1.62;
+        color: var(--fg-dim);
+      }
+      .t-line {
+        white-space: pre-wrap;
+      }
+      .t-row {
+        display: grid;
+        grid-template-columns: 14ch 1fr;
+        gap: 0 12px;
+      }
+      .t-dir {
+        white-space: nowrap;
+      }
+      .t-u {
+        color: var(--moss);
+        font-weight: 700;
+      }
+      .t-d,
+      .t-dir {
+        color: #7d9fdd;
+      }
+      .t-dir {
+        font-weight: 700;
+      }
+      .t-w {
+        color: var(--fg);
+      }
+      .t-c {
+        color: var(--fg-faint);
+      }
+      .t-k {
+        color: var(--ember);
+      }
+      .t-cursor {
+        display: inline-block;
+        width: 0.55em;
+        height: 1em;
+        vertical-align: -2px;
+        background: var(--fg);
+        animation: caret 0.95s steps(1) infinite;
+      }
+      .term-fetch-body {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 22px;
+        align-items: start;
+      }
+      .ff-logo {
+        margin: 0;
+        font-family: var(--mono);
+        font-size: 0.6rem;
+        line-height: 1.25;
+        color: var(--rust);
+        text-shadow: 0 0 14px rgba(192, 67, 47, 0.35);
+      }
+      .ff-head {
+        color: var(--moss);
+        font-weight: 700;
+      }
+      .ff-sep {
+        color: var(--fg-faint);
+      }
+      .ff-l {
+        white-space: pre-wrap;
+      }
+      .ff-k {
+        color: var(--ember);
+        font-weight: 700;
+      }
+      .ff-pal {
+        display: flex;
+        gap: 4px;
+        margin-top: 12px;
+      }
+      .ff-pal span {
+        display: block;
+        width: 18px;
+        height: 12px;
+        border-radius: 2px;
+      }
+      @media (max-width: 880px) {
+        .term-stack {
+          display: grid;
+          gap: 16px;
+          padding-bottom: 0;
+        }
+        .term-log,
+        .term-fetch {
+          position: relative;
+          width: 100%;
+          top: auto;
+          right: auto;
+        }
+        .term-fetch-body {
+          grid-template-columns: 1fr;
+        }
+        .ff-logo {
+          font-size: 0.55rem;
+        }
+        .term-body {
+          font-size: 0.72rem;
+        }
+        .t-hint {
+          display: none;
+        }
+      }
+
+      #boot-screen {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+        background-color: #060604;
+        align-items: center;
+        justify-content: center;
+        transition:
+          opacity 0.55s ease,
+          background-color 0.12s linear;
+      }
+      .js #boot-screen {
+        display: flex;
+      }
+      #boot-screen.done {
+        opacity: 0;
+        pointer-events: none;
+      }
+      html.loading {
+        overflow: hidden;
+      }
+      .boot-box {
+        text-align: center;
+        font-family: var(--mono);
+        color: var(--fg);
+      }
+      .boot-flame {
+        display: block;
+        width: 8px;
+        height: 8px;
+        margin: 48px auto 30px;
+        background: #ffdca4;
+        box-shadow:
+          0 -48px 0 var(--ember),
+          0 -40px 0 var(--ember-hi),
+          -8px -32px 0 var(--ember),
+          0 -32px 0 var(--ember-hi),
+          8px -32px 0 var(--ember),
+          -8px -24px 0 var(--ember-hi),
+          0 -24px 0 #ffdca4,
+          8px -24px 0 var(--ember-hi),
+          -16px -16px 0 var(--ember),
+          -8px -16px 0 var(--ember-hi),
+          0 -16px 0 #ffdca4,
+          8px -16px 0 var(--ember-hi),
+          16px -16px 0 var(--ember),
+          -16px -8px 0 var(--ember),
+          -8px -8px 0 var(--ember-hi),
+          0 -8px 0 #ffdca4,
+          8px -8px 0 var(--ember-hi),
+          16px -8px 0 var(--ember),
+          -8px 0 0 var(--ember),
+          8px 0 0 var(--ember);
+      }
+      .boot-title {
+        font-size: 0.8rem;
+        letter-spacing: 6px;
+        color: var(--moss);
+        margin-bottom: 14px;
+      }
+      .boot-blink {
+        color: var(--ember);
+        animation: caret 0.9s steps(1) infinite;
+      }
+      .boot-pct-wrap {
+        font-size: 2.6rem;
+        font-weight: 700;
+        color: var(--ember);
+        text-shadow: 3px 3px 0 rgba(192, 67, 47, 0.55);
+        margin-bottom: 18px;
+      }
+      .boot-sym {
+        font-size: 1.2rem;
+        margin-left: 6px;
+        color: var(--fg-dim);
+      }
+      .boot-bar {
+        display: flex;
+        gap: 4px;
+        padding: 6px;
+        border: 4px solid var(--fg);
+        width: max-content;
+        margin: 0 auto 16px;
+        background: #0a0b06;
+        box-shadow:
+          0 0 0 4px #060604,
+          0 0 0 8px var(--line);
+      }
+      .boot-bar b {
+        width: 12px;
+        height: 18px;
+        background: #1d1e12;
+      }
+      .boot-bar b.on {
+        background: var(--ember);
+        box-shadow:
+          inset -3px -3px 0 rgba(0, 0, 0, 0.35),
+          inset 3px 3px 0 rgba(255, 220, 164, 0.35);
+      }
+      .boot-tip {
+        font-size: 0.66rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--fg-faint);
+      }
+      @media (max-width: 480px) {
+        .boot-bar b {
+          width: 9px;
+          height: 15px;
+        }
+        .boot-pct-wrap {
+          font-size: 2.1rem;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         html {
           scroll-behavior: auto;
@@ -1896,6 +2212,106 @@
   </head>
 
   <body>
+    <div id="boot-screen" aria-hidden="true">
+      <div class="boot-box">
+        <span class="boot-flame"></span>
+        <div class="boot-title">CARREGANDO<span class="boot-blink">_</span></div>
+        <div class="boot-pct-wrap">
+          <span id="boot-pct">000</span><span class="boot-sym">%</span>
+        </div>
+        <div class="boot-bar">
+          <b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b
+          ><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+        </div>
+        <div class="boot-tip">acendendo as brasas</div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var ov = document.getElementById("boot-screen");
+        if (!ov) return;
+        var num = document.getElementById("boot-pct");
+        var cels = ov.querySelectorAll(".boot-bar b");
+        var alvo = 12;
+        var atual = 0;
+        var fim = false;
+        document.documentElement.classList.add("loading");
+        var barra = 0;
+        try {
+          var probe = document.createElement("div");
+          probe.style.cssText =
+            "position:absolute;top:-9999px;width:60px;height:60px;overflow:scroll";
+          document.body.appendChild(probe);
+          barra = probe.offsetWidth - probe.clientWidth;
+          document.body.removeChild(probe);
+          if (barra > 0) {
+            document.documentElement.style.paddingRight = barra + "px";
+          }
+        } catch (e) {}
+        function sobe(v) {
+          if (v > alvo) alvo = v;
+        }
+        function pinta() {
+          var p = Math.floor(atual);
+          num.textContent = ("00" + p).slice(-3);
+          var acesas = Math.round((p / 100) * cels.length);
+          for (var i = 0; i < cels.length; i++) {
+            cels[i].className = i < acesas ? "on" : "";
+          }
+          ov.style.backgroundColor =
+            "rgba(6, 6, 4, " +
+            (1 - Math.pow(p / 100, 1.6) * 0.96).toFixed(3) +
+            ")";
+        }
+        function encerra() {
+          if (fim) return;
+          fim = true;
+          atual = 100;
+          pinta();
+          setTimeout(function () {
+            ov.className = "done";
+            document.documentElement.classList.remove("loading");
+            document.documentElement.style.paddingRight = "";
+            setTimeout(function () {
+              if (ov.parentNode) ov.parentNode.removeChild(ov);
+            }, 700);
+          }, 380);
+        }
+        var timer = setInterval(function () {
+          var f = alvo >= 100 ? 0.28 : 0.16;
+          atual += (alvo - atual) * f;
+          if (atual > alvo) atual = alvo;
+          pinta();
+          if (alvo >= 100 && atual > 99.2) {
+            clearInterval(timer);
+            encerra();
+          }
+        }, 80);
+        try {
+          if (document.readyState === "complete") {
+            sobe(100);
+          } else {
+            document.addEventListener("readystatechange", function () {
+              if (document.readyState === "interactive") sobe(55);
+              if (document.readyState === "complete") sobe(100);
+            });
+            window.addEventListener("load", function () {
+              sobe(100);
+            });
+          }
+          if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(function () {
+              sobe(78);
+            });
+          }
+        } catch (e) {
+          sobe(100);
+        }
+        setTimeout(function () {
+          sobe(100);
+        }, 12000);
+      })();
+    </script>
     <header class="top">
       <div class="wrap">
         <a href="#topo" class="mark">Gon<span class="m-e">e</span>llo</a>
@@ -1906,6 +2322,7 @@
           <a href="#animes">animes</a>
           <a href="#setup">setup</a>
           <a href="#contato">contato</a>
+          <a href="#terminal">terminal</a>
         </nav>
         <a
           class="online"
@@ -2653,37 +3070,39 @@
               <div class="gmedia">
                 <img
                   class="gcover"
-                  src="imagens/stardew.jpg"
-                  alt="Capa de Stardew Valley"
+                  src="imagens/hollow-knight.jpg"
+                  alt="Capa de Hollow Knight"
                   loading="lazy"
                   onerror="this.remove()"
                 />
               </div>
-              <h3>Stardew Valley</h3>
-              <div class="ggenre">fazenda · RPG</div>
+              <h3>Hollow Knight</h3>
+              <div class="ggenre">metroidvania · ação</div>
               <div class="cardinfo">
                 <p>
-                  Um simulador de fazenda com alma de RPG, criado quase
-                  inteiramente por uma única pessoa (ConcernedApe). Você herda a
-                  fazenda do avô e precisa colocá-la de pé.
+                  O metroidvania que virou lenda. Um pequeno cavaleiro
+                  silencioso explora Hallownest, reino subterrâneo de insetos
+                  em ruínas, desenhado à mão — cada caverna esconde segredos,
+                  chefes brutais e muita melancolia.
                 </p>
                 <p>
-                  Plante, crie animais, pesque, minere, faça amizades (e
-                  romances) e ajude a reviver uma cidadezinha — tudo no seu
-                  próprio ritmo, sem pressa.
+                  Combate preciso de ferrão, amuletos que remodelam a build e
+                  um mapa interconectado gigante. Feito por uma equipe
+                  minúscula na Team Cherry, virou clássico instantâneo do
+                  gênero.
                 </p>
                 <ul class="facts">
                   <li>
-                    <span class="fk">criador</span
-                    ><span class="fv">ConcernedApe</span>
+                    <span class="fk">estúdio</span
+                    ><span class="fv">Team Cherry</span>
                   </li>
                   <li>
                     <span class="fk">lançamento</span
-                    ><span class="fv">2016</span>
+                    ><span class="fv">2017</span>
                   </li>
                   <li>
                     <span class="fk">gênero</span
-                    ><span class="fv">Simulação · RPG</span>
+                    ><span class="fv">Metroidvania · ação</span>
                   </li>
                 </ul>
               </div>
@@ -2698,36 +3117,39 @@
               <div class="gmedia">
                 <img
                   class="gcover"
-                  src="imagens/league-of-legends.jpg"
-                  alt="Capa de League of Legends"
+                  src="imagens/hollow-knight-silksong.jpg"
+                  alt="Capa de Hollow Knight: Silksong"
                   loading="lazy"
                   onerror="this.remove()"
                 />
               </div>
-              <h3>League of Legends</h3>
-              <div class="ggenre">MOBA · 5v5</div>
+              <h3>Hollow Knight: Silksong</h3>
+              <div class="ggenre">metroidvania · ação</div>
               <div class="cardinfo">
                 <p>
-                  Um dos maiores MOBAs do mundo. Em partidas 5 contra 5, cada
-                  jogador controla um "campeão" único com habilidades próprias,
-                  com o objetivo de destruir o Nexus inimigo.
+                  A sequência que o mundo esperou seis anos — e valeu. Agora
+                  como Hornet, caçadora ágil e letal, você escala o reino de
+                  Pharloom, das grutas musgosas à cidadela no topo, num mundo
+                  regido por seda e canção.
                 </p>
                 <p>
-                  É puro trabalho de equipe, controle de mapa e milhares de
-                  combinações possíveis. Gratuito, desenvolvido pela Riot Games.
+                  Mais rápido, maior e mais difícil que o original: mais de
+                  200 inimigos, ferramentas criáveis e chefes implacáveis.
+                  Aclamação universal, GOTY do Steam Awards de 2025 e expansão
+                  gratuita a caminho.
                 </p>
                 <ul class="facts">
                   <li>
                     <span class="fk">estúdio</span
-                    ><span class="fv">Riot Games</span>
+                    ><span class="fv">Team Cherry</span>
                   </li>
                   <li>
                     <span class="fk">lançamento</span
-                    ><span class="fv">2009</span>
+                    ><span class="fv">2025</span>
                   </li>
                   <li>
                     <span class="fk">gênero</span
-                    ><span class="fv">MOBA · 5v5</span>
+                    ><span class="fv">Metroidvania · ação</span>
                   </li>
                 </ul>
               </div>
@@ -3235,7 +3657,7 @@
           <div class="inv-grid stagger">
             <div class="slot" tabindex="0" role="button" aria-haspopup="dialog">
               <span class="corner"></span>
-              <div class="scat">notebook</div>
+              <div class="scat"><i class="bi bi-laptop s-ico" aria-hidden="true"></i>notebook</div>
               <div class="sname">Acer Aspire 5</div>
               <div class="sspec">24 GB RAM · SSD M.2 1 TB</div>
               <div class="cardinfo">
@@ -3267,7 +3689,7 @@
 
             <div class="slot" tabindex="0" role="button" aria-haspopup="dialog">
               <span class="corner"></span>
-              <div class="scat">mouse</div>
+              <div class="scat"><i class="bi bi-mouse s-ico" aria-hidden="true"></i>mouse</div>
               <div class="sname">Logitech G203</div>
               <div class="sspec">8.000 DPI · RGB</div>
               <div class="cardinfo">
@@ -3302,7 +3724,7 @@
 
             <div class="slot" tabindex="0" role="button" aria-haspopup="dialog">
               <span class="corner"></span>
-              <div class="scat">teclado</div>
+              <div class="scat"><i class="bi bi-keyboard s-ico" aria-hidden="true"></i>teclado</div>
               <div class="sname">Redragon Lakshmi</div>
               <div class="sspec">60% ABNT2 · switch marrom</div>
               <div class="cardinfo">
@@ -3337,7 +3759,7 @@
 
             <div class="slot" tabindex="0" role="button" aria-haspopup="dialog">
               <span class="corner"></span>
-              <div class="scat">headset</div>
+              <div class="scat"><i class="bi bi-headset s-ico" aria-hidden="true"></i>headset</div>
               <div class="sname">JBL 770NT</div>
               <div class="sspec">Bluetooth · ANC</div>
               <div class="cardinfo">
@@ -3370,7 +3792,7 @@
 
             <div class="slot" tabindex="0" role="button" aria-haspopup="dialog">
               <span class="corner"></span>
-              <div class="scat">microfone</div>
+              <div class="scat"><i class="bi bi-mic s-ico" aria-hidden="true"></i>microfone</div>
               <div class="sname">FIFINE A8</div>
               <div class="sspec">USB · cardióide</div>
               <div class="cardinfo">
@@ -3405,7 +3827,7 @@
 
             <div class="slot" tabindex="0" role="button" aria-haspopup="dialog">
               <span class="corner"></span>
-              <div class="scat">base notebook</div>
+              <div class="scat"><i class="bi bi-fan s-ico" aria-hidden="true"></i>base notebook</div>
               <div class="sname">C3Tech NBC-510BK</div>
               <div class="sspec">até 17,3" · RGB</div>
               <div class="cardinfo">
@@ -3440,7 +3862,7 @@
 
             <div class="slot" tabindex="0" role="button" aria-haspopup="dialog">
               <span class="corner"></span>
-              <div class="scat">controle</div>
+              <div class="scat"><i class="bi bi-controller s-ico" aria-hidden="true"></i>controle</div>
               <div class="sname">Controle</div>
               <div class="sspec">Xbox One</div>
               <div class="cardinfo">
@@ -3472,7 +3894,7 @@
 
             <div class="slot" tabindex="0" role="button" aria-haspopup="dialog">
               <span class="corner"></span>
-              <div class="scat">monitor</div>
+              <div class="scat"><i class="bi bi-display s-ico" aria-hidden="true"></i>monitor</div>
               <div class="sname">Monitor Portátil</div>
               <div class="sspec">Multi</div>
               <div class="cardinfo">
@@ -3519,7 +3941,7 @@
               rel="noopener"
             >
               <div class="sl-top">
-                <span class="sl-name">Spotify</span
+                <span class="sl-name"><i class="bi bi-spotify sl-ico" aria-hidden="true"></i>Spotify</span
                 ><span class="sl-arr">↗</span>
               </div>
               <span class="sl-handle">ouça comigo</span>
@@ -3531,7 +3953,7 @@
               rel="noopener"
             >
               <div class="sl-top">
-                <span class="sl-name">Steam</span><span class="sl-arr">↗</span>
+                <span class="sl-name"><i class="bi bi-steam sl-ico" aria-hidden="true"></i>Steam</span><span class="sl-arr">↗</span>
               </div>
               <span class="sl-handle">philfino98</span>
             </a>
@@ -3542,7 +3964,7 @@
               rel="noopener"
             >
               <div class="sl-top">
-                <span class="sl-name">Twitch</span><span class="sl-arr">↗</span>
+                <span class="sl-name"><i class="bi bi-twitch sl-ico" aria-hidden="true"></i>Twitch</span><span class="sl-arr">↗</span>
               </div>
               <span class="sl-handle">philfino98</span>
             </a>
@@ -3553,7 +3975,7 @@
               rel="noopener"
             >
               <div class="sl-top">
-                <span class="sl-name">YouTube</span
+                <span class="sl-name"><i class="bi bi-youtube sl-ico" aria-hidden="true"></i>YouTube</span
                 ><span class="sl-arr">↗</span>
               </div>
               <span class="sl-handle">@philfino98</span>
@@ -3565,7 +3987,7 @@
               rel="noopener"
             >
               <div class="sl-top">
-                <span class="sl-name">Instagram</span
+                <span class="sl-name"><i class="bi bi-instagram sl-ico" aria-hidden="true"></i>Instagram</span
                 ><span class="sl-arr">↗</span>
               </div>
               <span class="sl-handle">@oficialagnellohenrique</span>
@@ -3577,7 +3999,7 @@
               rel="noopener"
             >
               <div class="sl-top">
-                <span class="sl-name">GitHub</span><span class="sl-arr">↗</span>
+                <span class="sl-name"><i class="bi bi-github sl-ico" aria-hidden="true"></i>GitHub</span><span class="sl-arr">↗</span>
               </div>
               <span class="sl-handle">Philfino98</span>
             </a>
@@ -3588,7 +4010,7 @@
               rel="noopener"
             >
               <div class="sl-top">
-                <span class="sl-name">Discord</span
+                <span class="sl-name"><i class="bi bi-discord sl-ico" aria-hidden="true"></i>Discord</span
                 ><span class="sl-arr">↗</span>
               </div>
               <span class="sl-handle">entrar no servidor</span>
@@ -3600,10 +4022,108 @@
               rel="noopener"
             >
               <div class="sl-top">
-                <span class="sl-name">X</span><span class="sl-arr">↗</span>
+                <span class="sl-name"><i class="bi bi-twitter-x sl-ico" aria-hidden="true"></i>X</span><span class="sl-arr">↗</span>
               </div>
               <span class="sl-handle">@Philfino98</span>
             </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="block reveal" id="terminal">
+        <div class="wrap">
+          <div class="s-eyebrow">sistema</div>
+          <h2>Terminal de bordo</h2>
+          <p class="s-sub">
+            O que roda por trás do diário — e a máquina que o mantém aceso.
+            <span class="hint t-hint">Passe o mouse sobre as janelas.</span>
+          </p>
+          <div class="term-stack">
+            <div
+              class="term term-log"
+              tabindex="0"
+              aria-label="Terminal com as tecnologias do projeto"
+            >
+              <div class="term-bar">
+                <span class="tb-dot"></span><span class="tb-dot"></span
+                ><span class="tb-dot"></span>
+                <span class="term-title">gonello@debian: ~/diario</span>
+              </div>
+              <div class="term-body">
+                <div class="t-line">
+                  <span class="t-u">gonello@debian</span
+                  ><span class="t-w">:</span><span class="t-d">~/diario</span
+                  ><span class="t-w">$</span> cat changelog.txt
+                </div>
+                <div class="t-line t-c">## diário do sobrevivente — o que foi feito</div>
+                <div class="t-row"><span class="t-k">[estrutura]</span><span class="t-v">HTML5 semântico, arquivo único, zero build</span></div>
+                <div class="t-row"><span class="t-k">[estilo]</span><span class="t-v">CSS3 puro — grid, flexbox, custom properties, gradientes radiais e cônicos, mask, @property, keyframes e prefers-reduced-motion de verdade</span></div>
+                <div class="t-row"><span class="t-k">[lógica]</span><span class="t-v">JavaScript vanilla (ES5), zero frameworks — IntersectionObserver, requestAnimationFrame, FLIP, focus trap, scroll-spy</span></div>
+                <div class="t-row"><span class="t-k">[biblioteca]</span><span class="t-v">Bootstrap Icons, local — a única dependência</span></div>
+                <div class="t-row"><span class="t-k">[integrações]</span><span class="t-v">Twitch Embed SDK + chat · decapi.me</span></div>
+                <div class="t-row"><span class="t-k">[efeitos]</span><span class="t-v">brasas · brilhos explosivos · névoa · flicker · pavio nas divisórias · sheen · anel de fogo · tilt 3D · odômetro · typewriter · ping ao vivo · modal nascendo do card · chama de fogueira</span></div>
+                <div class="t-row"><span class="t-k">[a11y]</span><span class="t-v">teclado, aria, foco visível, movimento reduzido</span></div>
+                <div class="t-row"><span class="t-k">[deploy]</span><span class="t-v">estático no GitHub Pages</span></div>
+                <div class="t-line">&nbsp;</div>
+                <div class="t-line">
+                  <span class="t-u">gonello@debian</span
+                  ><span class="t-w">:</span><span class="t-d">~/diario</span
+                  ><span class="t-w">$</span> ls tecnologias/
+                </div>
+                <div class="t-line">
+                  <span class="t-dir">html5</span>  <span class="t-dir">css3</span>  <span class="t-dir">javascript</span>  <span class="t-dir">bootstrap-icons</span>  <span class="t-dir">twitch-api</span>  <span class="t-dir">github-pages</span>
+                </div>
+                <div class="t-line">
+                  <span class="t-u">gonello@debian</span
+                  ><span class="t-w">:</span><span class="t-d">~/diario</span
+                  ><span class="t-w">$</span> <span class="t-cursor"></span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="term term-fetch"
+              tabindex="0"
+              aria-label="Terminal fastfetch com as configurações da máquina"
+            >
+              <div class="term-bar">
+                <span class="tb-dot"></span><span class="tb-dot"></span
+                ><span class="tb-dot"></span>
+                <span class="term-title">gonello@debian: ~ — fastfetch</span>
+              </div>
+              <div class="term-body term-fetch-body">
+                <pre class="ff-logo" aria-hidden="true">
+       _,met$$$$$gg.
+    ,g$$$$$$$$$$$$$$$P.
+  ,g$$P"        """Y$$.".
+ ,$$P'              `$$$.
+',$$P       ,ggs.     `$$b:
+`d$$'     ,$P"'   .    $$$
+ $$P      d$'     ,    $$P
+ $$:      $$.   -    ,d$$'
+ $$;      Y$b._   _,d$P'
+ Y$$.    `.`"Y$$$$P"'
+ `$$b      "-.__
+  `Y$$b
+   `Y$$.
+     `$$b.
+       `Y$$b.
+         `"Y$b._
+             `""""</pre>
+                <div>
+                  <div class="ff-info" id="ff-info"></div>
+                  <div class="ff-pal" aria-hidden="true">
+                    <span style="background: #23241a"></span
+                    ><span style="background: var(--rust)"></span
+                    ><span style="background: var(--ember)"></span
+                    ><span style="background: var(--ember-hi)"></span
+                    ><span style="background: var(--moss)"></span
+                    ><span style="background: #7d9fdd"></span
+                    ><span style="background: var(--fg-dim)"></span
+                    ><span style="background: var(--fg)"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -3722,6 +4242,57 @@
                 's"></i>';
             }
             box.insertAdjacentHTML("beforeend", html);
+          })();
+
+          (function () {
+            var alvo = document.getElementById("ff-info");
+            if (!alvo) return;
+            var host = "";
+            var specs = "";
+            Array.prototype.forEach.call(
+              document.querySelectorAll(".slot"),
+              function (s) {
+                var cat = s.querySelector(".scat");
+                if (!cat || cat.textContent.trim() !== "notebook") return;
+                var nm = s.querySelector(".sname");
+                var sp = s.querySelector(".sspec");
+                if (nm) host = nm.textContent.trim();
+                if (sp) specs = sp.textContent.trim();
+              }
+            );
+            var jogos = document.querySelectorAll(
+              "#jogos .gfeat, #jogos .gcard"
+            ).length;
+            var animes = document.querySelectorAll(
+              "#animes .gfeat, #animes .acard"
+            ).length;
+            var nomeEl = document.querySelector(".hero h1");
+            var nome = nomeEl
+              ? nomeEl.textContent.replace(/\s+/g, " ").trim()
+              : "Gonello";
+            var linhas = [
+              ["OS", "Debian GNU/Linux"],
+              ["Host", host],
+              ["DE", "GNOME"],
+              ["Shell", "bash"],
+              ["Hardware", specs],
+              ["Uptime", '<span data-count="dias">0</span> dias'],
+              ["Pacotes", jogos + " jogos, " + animes + " animes"],
+              ["Nome", nome],
+              ["Idade", '<span data-count="idade">0</span> anos'],
+              ["Pa\u00eds", "Brasil \u2014 Bahia"],
+            ];
+            var out =
+              '<div class="ff-head">gonello@debian</div><div class="ff-sep">---------------</div>';
+            for (var i = 0; i < linhas.length; i++) {
+              out +=
+                '<div class="ff-l"><span class="ff-k">' +
+                linhas[i][0] +
+                "</span>: " +
+                linhas[i][1] +
+                "</div>";
+            }
+            alvo.innerHTML = out;
           })();
 
           (function () {
@@ -3910,6 +4481,30 @@
               }
             }
             setTimeout(tecla, 420);
+          })();
+
+
+          (function () {
+            var termos = document.querySelectorAll("#terminal .term");
+            if (!termos.length) return;
+            function limpa() {
+              Array.prototype.forEach.call(termos, function (t) {
+                t.classList.remove("fixo");
+              });
+            }
+            Array.prototype.forEach.call(termos, function (t) {
+              t.addEventListener("click", function () {
+                limpa();
+                t.classList.add("fixo");
+              });
+            });
+            document.addEventListener("click", function (e) {
+              var dentro = false;
+              Array.prototype.forEach.call(termos, function (t) {
+                if (t.contains(e.target)) dentro = true;
+              });
+              if (!dentro) limpa();
+            });
           })();
 
           (function () {
